@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+    <link href="../favicon.ico" rel="shortcut icon">
+    <title>hacktx-2014 | Samuel Taylor</title>
+  </head>
+  <body>
+<p><a href="./articles.html">Back</a></p>
+<h1>Hackathon report: HackTX 2014</h1>
+
+<h2>Idea</h2>
+
+<p>Most college students are aware that registering for classes can be a real pain.
+At Baylor, we don't have a waitlist on many of our classes. If you fail to get
+into a class, you are doomed to logging in several times a day and hoping a seat
+is open. This process is a waste of time; we wanted to automate it.
+<a href="http://coursewatch.me/">CourseWatch</a> makes registering for classes suck less.</p>
+
+<p>We thought about creating a mobile app that would run in the background on
+users' phones. Such an app would require no infrastructure on our end, which
+would be great. However, it would require users to download the app and enter
+their login credentials. We decided to go with an SMS-based solution. Users
+would text us a course number, and we would text them once their class opened
+up. Because signing up was as simple as sending a text, this option would have
+low friction, which is good for user acquisition.</p>
+
+<p><a href="https://www.hackerleague.org/hackathons/hacktx-2014/hacks/course-watch">Here's the project page on
+HackerLeague</a>,
+which has some basic information about the project.</p>
+
+<h2>Project</h2>
+
+<p>I set up a private GitHub repository on my account and added Wes and Evan as
+contributors.</p>
+
+<p>After we found a work space and set up our laptops/devices Wes started
+working on creating the screen scraper, Evan started researching other colleges'
+registration systems, and I started setting up our server. We decided
+to use Microsoft Azure because the Azure team was offering free hosting. I set
+up an Ubuntu server with Apache, MySQL, and PHP.</p>
+
+<p>Wes helped me set up <a href="http://dploy.io/">dploy.io</a> to deploy our code
+automatically from the master branch of our repository. I'd not used a
+continuous deployment service before and was pleased by the ease with which it
+let us deploy our code. A pitfall with using this service was that because our
+changes to master were automatically deployed, it was easy to get sloppy and
+push untested code to master in order to test it on our server. This problem is
+our own fault and only requires more discipline to fix. Within a hackathon,
+though, it was not a major issue.</p>
+
+<p>Once the server was set up, I got to work handling inbound SMS messages. I had
+experience with using Twilio for SMS from HackTX 2013 and chose to use it again
+because it's easy to use and inexpensive.</p>
+
+<p>After a few minutes of work, Evan finished with his research and wanted to
+continue helping. We didn't have a clear design at that point, so I didn't know
+what he could work on. As Wes continued to work on the screen scraper, I spread
+out a napkin and started drawing the system out. Through this process, I
+identified three main areas: notification subscription (which I was working on),
+screen scraping (which Wes was working on), and notifying users. Being that
+nobody was working on notifying users, Evan started working on that.</p>
+
+<p>Evan had never used PHP before, so he needed some direction. He sat at the
+keyboard, and I sat next to him. Within an hour or two, he had figured out
+enough PHP to be dangerous, so I moved to work on subscription through SMS.</p>
+
+<p>Wes sort of reverse engineered BearWeb, which was an interesting and tedious
+process. He opened up <a href="http://www.charlesproxy.com/">Charles</a> and clicked around
+Baylor's internal course registration website. He would then perform the same
+requests in PHP using curl. After several moments where everything seemed
+hopeless, he eventually got everything figured out.</p>
+
+<p>A little after midnight, we had version one done. You could text in a course
+number and would get notified a few minutes later that it was open (registration
+wasn't open yet, so all seats were open). Wes then set to creating a website for
+the product while I worked on adding SendGrid integration so that users could
+sign up for notification through email. The SendGrid API was also a pleasure to
+work with.</p>
+
+<p>By around 3:00, the website was looking good enough and we had gotten SendGrid
+integration working. At this point, we decided to get some rest. We napped in
+the hallway for a few hours then got up to figure out our presentation.</p>
+
+<h2>Presentation</h2>
+
+<p>HackTX 2014 did "science-fair style" presentations, which I liked. Each team had
+a spot on a table, and a number of judges came around to check out each project.
+During this time, participants were encouraged to walk around and check out each
+others' projects. I was able to check out a few of the projects near us, but did
+not spend much time looking around; I wanted to get feedback on what we had
+made.</p>
+
+<p>We received a lot of positive feedback from judges and other participants.
+People liked the high level of polish in our product and presentation. They also
+believed we were solving a real problem in a good way. Unfortunately, we
+weren't chosen to present during the closing ceremonies. On the plus side, we
+won three sponsor awards:
+* TripAdvisor prize -- 3 day trip to Boston
+* Best use of Microsoft Azure -- Dell XPS U12 laptop
+* Best use of SendGrid -- Jawbone MINIJAMBOX</p>
+
+<h2>Summary</h2>
+
+<p>HackTX 2014 was great. We had fun, built a great product, and won some awesome
+prizes.</p>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+    <link href="../favicon.ico" rel="shortcut icon">
+    <title>coffee-and-the-word | Samuel Taylor</title>
+  </head>
+  <body>
+<p><a href="./articles.html">Back</a></p>
+<h1>Coffee and the Word</h1>
+
+<p>I created a website called <a href="http://coffeeandtheword.tk/">Coffee and the Word</a>
+which displays a different passage from the Bible each day. It is intentionally
+simple and designed with readers in mind. This article describes the development
+of the project from idea to maintenance.</p>
+
+<h2>Idea</h2>
+
+<p>I have followed <a href="http://www.bibledesignblog.com">Bible Design Blog</a> for several
+months and have gained an appreciation for the design of Bibles. Some time this
+summer, the author posted several times about Bibles designed to be read more
+like a narrative and less like a reference book. One such Bible is called
+Bibliotheca. <a href="https://www.kickstarter.com/projects/530877925/bibliotheca">The
+Kickstarter</a> was
+very successful--it currently has $1.4 million pledged. When I saw the project's
+success, I thought that perhaps people had started caring about design
+aspects of the Bible.</p>
+
+<p>With that in mind, I had the idea to create a website that displayed passages
+from the Bible which prioritized design.</p>
+
+<h2>Motivation</h2>
+
+<p>I serve as a Resident Assistant at my university, and I was on call for
+Thanksgiving break. I had time and wanted to strengthen my front end and design
+skills, so I took to my Trello board of project ideas and looked for something
+interesting. This one fit the bill.</p>
+
+<h2>Initial execution</h2>
+
+<p>I found a site online that had Bible reading plans, picked on that looked good,
+and wrote <a href="https://github.com/ssaamm/just-the-word/blob/master/tools/parse.py">a small Python
+script</a> to
+parse the HTML representation of the plan, turning it into <a href="https://github.com/ssaamm/just-the-word/blob/master/tools/plan.txt">a text
+file</a>. From
+there, it was easier to get the reading plan inserted into a SQLite database.</p>
+
+<p>I don't anticipate running into legal issues over the fact that I basically
+stole a reading plan because I don't think this project will garner much
+attention.</p>
+
+<p>After figuring out the passages I would be displaying each day, I turned to
+actually retrieving their text. I found <a href="http://www.esvapi.org/">Crossway's ESV Bible web
+service</a> and decided to use it. I have interacted with
+web services in Python before using <code>urllib2</code>, but wanted to try out the
+<a href="http://docs.python-requests.org/en/latest/">Requests library</a>. Requests is
+awesome. The library made creating web requests much simpler than I remember it
+being using <code>urllib2</code>.</p>
+
+<p>Initially, the website made a request to the Bible API every time it was
+accessed. Keeping this API access within a specific class later allowed me to
+implement caching of the text by changing only <a href="https://github.com/ssaamm/just-the-word/commit/af168e6bfd6e413836f9cf787c4509ec6b3c904b">one
+class</a>.
+Caching improved my page's load time on <code>localhost</code> from about 400ms to around
+5ms. I was pleased but not surprised by that improvement (web requests can be
+expensive).</p>
+
+<p>I thought about using Redis for caching (because it's fast) but decided to use
+SQLite because I did not want to add more dependencies. Additionally, for the
+purposes of this project, I was not especially concerned about performance. I
+still think it would be interesting to see how using Redis for caching would
+stack up to my current SQLite-based approach from a performance perspective.</p>
+
+<p>Another option was to go through the reading plan I had stored, fetching all of
+the verses in advance. Then, I wouldn't have to make any requests to the Bible
+API in the future. There were a few reasons I didn't do this:</p>
+
+<ol>
+<li>Storing that many verses is against the API's ToS</li>
+<li>It would have been harder to implement than caching</li>
+<li>It's not worth it--Yes, a single request per day is going to take
+significantly longer to process, but I think that one user can wait half a
+second.</li>
+</ol>
+
+<h2>Polishing</h2>
+
+<p>In an attempt to polish the site, I turned my attention to branding and design.</p>
+
+<p>Initially, I named the site "Just the Word," because that's what it was. I
+wanted to come up with something more interesting yet still simple. On a whim, I
+decided to make a reference to <a href="http://www.youtube.com/watch?v=My92oE9RwRE">Sh*tuff Christian Girls
+Say</a> and chose "Coffee and the
+Word." I found a coffee stain brush set online, changed a few lines of HTML, and
+was done
+(<a href="https://github.com/ssaamm/just-the-word/commit/625f95c593bfcae54a44c287d6333a6824deef6a">625f95c</a>).</p>
+
+<p>With the brand figured out, I turned to improving the design of the site. I tend
+to favor simple designs. I have very little knowledge of design, but my
+uneducated eye does not enjoy busy-looking pages. As an added bonus, it was way
+easier to make the site simple than it would have been to make it look fancy.</p>
+
+<p>I tried to follow <em>Practical Typography</em>'s <a href="http://practicaltypography.com/summary-of-key-rules.html">Summary of Key
+Rules</a>. I used
+<a href="http://www.typegenius.com/">TypeGenius</a> to decide on what fonts to use. As
+someone with no background in graphic design, I appreciate these resources
+because they at least give me somewhere to start.</p>
+
+<p>I had not done much with responsive web design, so I was excited to learn more.
+I found Google's <a href="https://developers.google.com/web/fundamentals/layouts/rwd-fundamentals/">Responsive Web Design
+Basics</a>
+and implemented some things I learned. The most interesting thing I learned was
+how to apply different stylesheets based on browser size
+(<a href="https://github.com/ssaamm/just-the-word/commit/2af63195d79633b30c3384107bbca48077128069">2af6319</a>).</p>
+
+<p>I had set the coffee stain image's width to be 50% of the document's width,
+which looked good until the window became wider than twice the width of the
+coffee stain image. At this point, the image was stretched beyond its 500px
+width, and the scaling made it look pixelated. I separated out the
+<code>background-size</code> rules into a separate stylesheet and used a <code>media</code> attribute
+to make those rules only apply up to a width of 1000px.</p>
+
+<h2>Production-izing</h2>
+
+<p>I have a server through <a href="http://www.cloudatcost.com/">CloudAtCost</a> that I rent
+for $9 per year using a coupon code. It runs Ubuntu Server 14.04.1 LTS. I'm
+using a free domain name on the <a href="http://dot.tk/">.tk TLD</a>.</p>
+
+<p>Deploying the application turned out to be more difficult than I anticipated.  I
+hadn't deployed a Flask app, so I read and tried to follow multiple guides with
+limited success. Eventually, I had luck following <a href="https://realpython.com/blog/python/kickstarting-flask-on-ubuntu-setup-and-deployment/">this
+guide</a>,
+which used Supervisor, Nginx, and Gunicorn on Ubuntu.</p>
+
+<p>I then set up <a href="http://dploy.io">dploy.io</a> to be able to easily deploy future
+changes. The service will copy over changed files and then restart the app with
+the press of a button; I find it convenient.</p>
+
+<p>I searched for a website monitoring service and found
+<a href="http://monitor.us">monitor.us</a>. It was easy enough to set up, and I get daily
+emails with a summary of both uptime and response times.</p>
+
+<h1>Summary</h1>
+
+<p>I made a simple website which displays a different Bible passage every day. I
+gained experience with responsive web design, deployment, and monitoring. Some
+technologies used include:</p>
+
+<ul>
+<li>Python/Flask</li>
+<li>HTML/CSS</li>
+<li>SQLite</li>
+<li>Nginx</li>
+<li>Gunicorn</li>
+</ul>
+
+<p>Thanks for reading! If you have any feedback or want to get in touch, email me
+at sam at this domain.</p>
+  </body>
+</html>
