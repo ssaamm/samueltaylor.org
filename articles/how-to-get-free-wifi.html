@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+    <link href="../favicon.ico" rel="shortcut icon">
+    <title>How to: get free WiFi | Samuel Taylor</title>
+  </head>
+  <body>
+<p><a href="./articles.html">Back</a></p>
+<h1>How to: get free WiFi</h1>
+
+<p>Some coffee shops place time limitations on their WiFi. For example, I recently
+went to a Panera that had a 30 minute time limit on their WiFi during lunch
+hours.</p>
+
+<p>Getting around such limits isn't difficult. I'm not sure how ethical it is to do
+so, so consider this all merely educational information.</p>
+
+<p>It seems these kinds of systems track you based on your MAC address. If your MAC
+address changes, the system thinks of you as a new user. Changing your MAC
+address is easy enough (on Linux):</p>
+
+<ol>
+<li><p>Figure out what interface you're using.</p>
+
+<p>Run <code>ifconfig</code> and look for the one that looks like right. Mine was <code>wlan0</code>.</p></li>
+<li><p>Change your MAC address</p>
+
+<p>ifconfig wlan0 down
+ifconfig wlan0 hw ether a1:b2:c3:d4:e5:f6
+ifconfig wlan0 up</p></li>
+</ol>
+
+<p>For ease of changing, you can make a script that looks something like:</p>
+
+<pre><code>#!/bin/bash
+
+ifconfig wlan0 down
+ifconfig wlan0 hw ether $1
+ifconfig wlan0 up
+</code></pre>
+
+<p>And then run it like <code>./change_mac.sh a1:b2:c3:d4:e5:f6</code>.</p>
+
+<p>If you want to get in touch, email me at sam at this domain. Thanks!</p>
+  </body>
+</html>
