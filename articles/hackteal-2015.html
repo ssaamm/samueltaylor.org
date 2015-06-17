@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+    <link href="../favicon.ico" rel="shortcut icon">
+    <title>Hackathon report: Hack@Teal 2015 | Samuel Taylor</title>
+  </head>
+  <body>
+<p><a href="articles.html">Back</a></p>
+<h1>Hackathon report: Hack@Teal 2015</h1>
+
+<p>My friend <a href="http://matttinsley.org/">Matt Tinsley</a> and I were both RA's in Teal
+Resdiential College from Fall 2014 to Spring 2015. We are also both big fans of
+hackathons. Matt had the idea for and led the organization of a hackathon for
+Teal residents. I helped him out with logistics, and we worked on a project in
+the time we weren't doing organizer-y things.</p>
+
+<p>The first two sections of this article relate to organizing the event, and the
+third is about the project I worked on.</p>
+
+<h2>Successes</h2>
+
+<p>Lots of things went well.</p>
+
+<ul>
+<li><strong>Learning</strong> -- Many people during demos said something to the effect of,
+"I've never done anything like this project before today. I learned so much."
+Our faculty master was impressed with how much people were able to learn,
+which was good seeing as he funded much of the event. Education was also a
+huge reason we wanted to have the event, so it was great to see our efforts
+pay off.</li>
+<li><strong>Team/idea formation</strong> -- At the beginning of the event, we had some time for
+individuals who came to the event to find a team. Matt and I stood in a circle
+with the individuals, and we all went around and said an idea we had. This
+format worked well; the four people we had formed two teams. I would recommend
+that organizers bring some simple ideas for people to work on; both of my
+ideas ended up getting used.</li>
+<li><strong>Venue</strong> -- Teal allowed us to use the media room, which had ample space. We
+were also able to bring over plenty of tables from a neighboring classroom.</li>
+<li><strong>Google forms</strong> -- good choice for our voting needs. I could imagine that for
+larger hackathons, there would be too many votes to use Google forms, but it
+was just what we needed for how many participants we had.</li>
+<li><strong>Food</strong> -- We had ample food, people seemed to like it well enough.</li>
+<li><strong>Hosting</strong> -- We had one team who wanted to do some stuff with web
+technologies, but didn't have much of an idea what they were doing. I spun up
+a VPS through <a href="https://www.digitalocean.com/?refcode=3dc2cdcca705">Digital
+Ocean</a>, and <a href="http://www.wescossick.com/">Wes
+Cossick</a> explained a few basic things to them.
+Like that, they were off!</li>
+</ul>
+
+<h2>Hardships</h2>
+
+<p>A few things were less than perfect.</p>
+
+<ul>
+<li><strong>Staying through the night</strong> -- I wish more people had chosen to stay through
+the night. Around 4 or 5 am, the room started to feel dead.</li>
+<li><strong>Judging</strong> -- Our faculty master did a great job of judging, but I think it
+would have been cool to have gotten a panel of judges rather than just one
+person.</li>
+</ul>
+
+<h2>My project</h2>
+
+<p>Matt and I worked on <a href="https://github.com/ssaamm/emoji-predictor">Emoji
+Predictor</a>. If you've ever used a
+smartphone keyboard that suggests words as you type, you'll understand what it
+is. Our project suggests relevant emojis for you to use in your text messages.</p>
+
+<p>We started with a database of all Matt's text messages. This would be our
+"corpus", or the body of text we would use to make inferences about which emojis
+should be used with which kinds of messages.</p>
+
+<p>While making an iOS keyboard would have been really cool, we wanted to make a
+proof of concept and focus on the part of the project we found interesting:
+getting from a string to the emojis most relevant to it. We decided to make a
+web UI. I whipped up a simple application using Python, Flask, and JavaScript
+(our code can be found on
+<a href="https://github.com/ssaamm/emoji-predictor">GitHub</a>).</p>
+
+<p>While I was working on the UI side of things, Matt started working on the
+recommendation engine using Python Natural Language Toolkit. While he worked on
+that, I decided to work on a different implementation of a recommendation
+engine. I loaded all of Matt's sent messages which contained emojis into
+Elasticsearch and ran a query on that index using user input. This basic
+implementation ended up working decently enough.</p>
+
+<p>Matt ended up having tons of trouble with Python and unicode, so for demo
+purposes we went with my implementation. I thought our product was pretty neat.</p>
+
+<p>Because it relied on Matt's personal information, a live demo unfortunately
+isn't up anywhere.</p>
+
+<h2>Conclusion</h2>
+
+<p>Despite a few minor problems, Hack@Teal went very well. I was glad to help, and
+I'd love to take part in organizing more hackathons. Because it was a small
+event, Matt and I were able to hack on our own project, which was fun and
+educational.</p>
+
+<p>If you want more information (especially about other people's projects), please
+see the official website for Hack@Teal 2015, <a href="http://hackteal.me/">hackteal.me</a>.</p>
+  </body>
+</html>
