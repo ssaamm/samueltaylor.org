@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+    <link href="../favicon.ico" rel="shortcut icon">
+    <title>Notes: Boston Django Meetup, Intro to Flask, 25 June 2015 | Samuel Taylor</title>
+  </head>
+  <body>
+<p><a href="articles.html">Back</a></p>
+<h1>Notes: Boston Django Meetup, Intro to Flask, 25 June 2015</h1>
+
+<p>On 25 June 2015, Ned Jackson Lovely spoke about Flask at the Boston Django Users
+Meetup Group. I took some notes and am putting them here so I don't lose them;
+they may or may not be useful to others. Theses notes are not exhaustive.</p>
+
+<hr />
+
+<p>Functions that are decorated with <code>@flaskapp.route()</code> should return:</p>
+
+<ul>
+<li>a string</li>
+<li>a tuple of (response, status, headers)</li>
+<li><code>flask.Response</code> / <code>current_app.response_class</code></li>
+<li><p>a WSGI callable</p>
+
+<ul>
+<li>In theory, your function could return another Flask app, or spit out a WSGI
+callable that generated a massive CSV on the fly and streamed it to the user</li>
+</ul></li>
+<li><p>You can do testing:</p>
+
+<p>def test<em>splash():
+    client = app.test</em>client()
+    response = client.get('/')
+    assert response.status_code == 200
+    assert 'form' in response.data</p></li>
+<li><p>The Werkzeug debugger is awesome</p></li>
+<li><p>Defining filters for templates is possible (and ostensibly simple)</p></li>
+</ul>
+
+<p>Sessions in Flask are interesting</p>
+
+<ul>
+<li>Session data is serialized to JSON, cryptographically signed, and set in the
+user's browser as a cookie</li>
+<li>Because it's client side, it doesn't matter which datacenter they end up in</li>
+<li><p>If you write to a "second level" in <code>session</code>, you need to set
+<code>session.modified = True</code> for the changes to get written out:</p>
+
+<p>session['first']['second'] = 'new thing'
+session.modified = True</p></li>
+<li><p>Flashing is done with sessions, and is useful for displaying those one-time,
+web app-y messages like "Your post was submitted"</p></li>
+<li><p>On a general Python note, contexts (<code>with</code>/<code>as</code>) are really cool -- you only
+have to implement two <code>__</code> methods to get the benefits of them</p></li>
+<li><p>Some useful libraries: SQLAlchemy, WTForms</p></li>
+</ul>
+
+<p>Blueprints:</p>
+
+<ul>
+<li>Helpful when your app gets bigger</li>
+<li>They're very similar to <code>Flask</code> objects with an additional "namespace"</li>
+<li><p>`app.register<em>blueprint(bp, url</em>prefix='/counter')</p></li>
+<li><p>To get GET/POST data, use <code>request.values</code></p></li>
+</ul>
+
+<p>Deploying:</p>
+
+<ul>
+<li>gevent, gunicorn, nginx, ansible  </li>
+<li>supervisor  </li>
+<li>pip freeze</li>
+</ul>
+  </body>
+</html>

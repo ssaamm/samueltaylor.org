@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+    <link href="../favicon.ico" rel="shortcut icon">
+    <title>Thoughts on Effective Java | Samuel Taylor</title>
+  </head>
+  <body>
+<p><a href="articles.html">Back</a></p>
+<h1>Thoughts on Effective Java</h1>
+
+<p>I'm reading the second edition of <em>Effective Java</em> in a group at work and
+writing some thoughts/notes about it here.</p>
+
+<h2>Chapter 2</h2>
+
+<p><strong>Item 1</strong> is about static factory methods.</p>
+
+<p>The leader of my group offered a point that static factory methods can be hard
+to mock. I don't have a ton of experience at this time with mocking objects, so
+I haven't seen that first hand, but I'll trust him and keep it in mind for the
+future.</p>
+
+<p><strong>Item 1, advantage 4</strong> says that static factory methods are good because they
+reduce verbosity in creating objects. The example they give is:</p>
+
+<pre><code>Map&lt;String, List&lt;String&gt;&gt; m = new HashMap&lt;String, List&lt;String&gt;&gt;();
+</code></pre>
+
+<p>Java 7 introduces the diamond operator, so this can become:</p>
+
+<pre><code>Map&lt;String, List&lt;String&gt;&gt; m = new HashMap&lt;&gt;();
+</code></pre>
+
+<p>thereby negating the verbosity-decreasing benefit of static factory methods.</p>
+
+<p>I'm not trying to say the book is wrong. It says "Revised and Updated for
+Java SE 6" on the cover, and for Java 6, that seems like a valid argument. I
+just think it's interesting how new language features can change what constitues
+a best practice. The book even says, "Someday the language may perform this sort
+of type inference on constructor invocations as well as method invocations."</p>
+
+<p><strong>Item 2</strong> is about builders.</p>
+
+<p>In the process of talking about builders, the author talks about the JavaBeans
+pattern. This pattern seems like a terrible idea to me; forgetting to set a
+required parameter is relatively easy and could have disastrous results. The
+Builder pattern seems like a better choice because it's a way to give the
+compiler more information. I would rather have my IDE yell at me at compile time
+that my object isn't instantiated correctly than wrestle with bugs at run time.</p>
+
+<p>Builders do introduce more code to write/maintain/test, but (as my group leader
+pointed out) the IDE can generate the class for you.</p>
+
+<p>The book has required parameters going in the builder's constructor and optional
+parameters being set by additional methods. My question is: what if the number
+of required parameters gets large? Then you haven't solved your problem at all.
+One option would be to move the required parameters into methods, but then
+you're not providing the compiler with the information to know that some of the
+parameters are required. Yes, the <code>build()</code> method can check for them and
+perhaps throw an exception, but that only happens at run time.</p>
+
+<p>I think that if you have so many required parameters, there might be something
+wrong with your design. Perhaps some arguments are logically related and should
+be combined into an instance of a new class which binds them together. I'm not
+sure if this is always the case, but it seems like it often would be.</p>
+
+<p><strong>Item 3</strong> talks about singletons.</p>
+
+<p>Our group leader told us to beware of the hidden state that often comes along
+with singletons. I have definitely run into that issue. When functions use state
+that is not from a parameter, things can get tricky. Knowing what state is used
+and how that will affect the execution of the function can be difficult for the
+developer.</p>
+
+<p>While the book says that, "a single-element enum type is the best way to
+implement a singleton," our leader disagreed. He argues that using an <code>enum</code> is
+less readable. I had a similar gut feeling when I first read this part of the
+Item; I would not have thought to use an <code>enum</code> to implement a singleton. In my
+mind, an <code>enum</code> represents an enumeration of a few different kinds of things; a
+singleton is something that there will only ever be one of. These two ideas seem
+at odds.</p>
+
+<p><strong>Item 4</strong> talks about noninstantiable classes. These classes are often used for
+utility methods.</p>
+
+<p>Again, apparently static things are difficult to mock. And Java's garbage
+collector has apparently gotten good enough that doing something like <code>(new
+FileUtility()).getPermissions(file)</code> will result in the created <code>FileUtility</code>
+being garbage collected very quickly. This all happens fast enough that there is
+very little performance impact.</p>
+
+<p><strong>Item 7</strong> says to avoid finalizers. I learned C++ in school, so the lack of
+guarantees with finalizers throws me off. In any case, I've never heard someone
+seriously advocate for finalizer usage.</p>
+
+<h2>Chapter 3</h2>
+
+<p><strong>Item 8</strong> is about the general contract for equals. The terms used in the
+contract are familiar from discrete math.</p>
+
+<p>For value objects, you want to override <code>equals()</code>. <code>equals()</code> gets tricky when
+inheritance comes into play, though. One solution to that problem is to not use
+inheritance with value object -- make your value objects <code>final</code>. Inheritance
+can be useful for business logic, so feel free to use inheritance in that case.
+For classes that implement business logic, though, it doesn't make much sense to
+implement <code>equals()</code>.</p>
+
+<p>An interesting thing I hadn't thought about is that <code>instanceof</code> checks for
+null:</p>
+
+<pre><code>public class Main
+{
+    public static void main(String[] args)
+    {
+        String nullString = null;
+        System.out.println(nullString instanceof String);
+    }
+}
+</code></pre>
+
+<p>Output:</p>
+
+<pre><code>false
+</code></pre>
+
+<p>One suggestion was to use an <code>EqualsBuilder</code>, like the one supplied in Apache
+Commons. Apparently, equals builders will help you avoid NPE's. To me, this
+seems like a cop-out. I don't think it's too terribly difficult to avoid writing
+an <code>equals()</code> method which won't throw an NPE; perhaps I haven't written enough
+Java.</p>
+
+<p><strong>Item 9</strong> is about <code>hashCode()</code>. Equal objects must have equal hash codes.</p>
+
+<p>The book contains an overview of how to write a <code>hashCode()</code> method that's good
+enough. Ground-breaking, cutting-edge, crazy high-performance hashing functions
+are going to be class-specific. Sometimes, this is fairly obvious; if your class
+has a unique ID, you can just return that as your hash code.</p>
+
+<p><strong>Item 10</strong> is about <code>toString()</code>. This method should only be used for debugging
+or logging purposes.</p>
+
+<p>The <code>StringBuilder</code> class gets this wrong--its <code>toString()</code> method is used for
+programmatic access to the string that is being built. It should probably have
+another method called <code>build()</code> to provide programmatic access, and leave
+<code>toString()</code> for logging purposes.</p>
+
+<p><strong>Item 11</strong> is about <code>clone()</code>. To be frank, I find the <code>Cloneable</code> interface
+confusing, and I haven't run into a good use for it.</p>
+
+<p><strong>Item 12</strong> is about <code>compareTo()</code>. The hard thing with <code>compareTo()</code> is that
+it's not particularly explicit about what the "natural" ordering means. By
+contrast, a <code>Comparator&lt;&gt;</code> can have a name which gives developers more
+information about how the comparison is done. This explicit information is
+probably good.</p>
+
+<p>As of Java 7, if you break the general contract for comparisons, an exception
+will be thrown.</p>
+  </body>
+</html>

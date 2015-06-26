@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../style.css" rel="stylesheet" type="text/css">
+    <link href="../favicon.ico" rel="shortcut icon">
+    <title>Notes: Boston Python User Group, Lightning Talks, 22 June 2015 | Samuel Taylor</title>
+  </head>
+  <body>
+<p><a href="articles.html">Back</a></p>
+<h1>Notes: Boston Python User Group, Lightning Talks, 22 June 2015</h1>
+
+<p>On 22 June 2015, the Boston Python User Group had a night of seven lightning
+talks. These are notes I took for personal use; they're not a perfect re-telling
+of what each talk was about (or even what each talk was called).</p>
+
+<h2>#1 Python for making connections in groups</h2>
+
+<h3>Speaker: John Hess</h3>
+
+<p>John and a friend distant from him in his social graph each ended up being stood
+up by friends at the same bar. They decided to sit down and solve the world's
+problems. They ended up enjoying their time, so John wanted to find a way to
+automate this sort of process.</p>
+
+<p>The idea is something like this:</p>
+
+<ul>
+<li>A group of people sign up on <a href="mavenbot.com">Maven</a></li>
+<li>The service selects a group of about 4-6 people and texts them to see if
+they're available</li>
+<li>As people accept or decline invitations to the event, Maven will text more
+people from the group to get them in on the event</li>
+<li>Maven then puts everyone into a group message so they can organize the event</li>
+</ul>
+
+<p>John found that:</p>
+
+<ul>
+<li>Building stuff is easy in Python</li>
+<li>Python is a Swiss army knife, but it can't do everything (for example, mobile
+development)</li>
+<li>While building stuff is easy, building stuff that is user friendly is <em>really
+hard</em>
+<ul>
+<li>John kept iterating, putting the product in front of friends, getting
+feedback, and trying new things</li>
+</ul></li>
+</ul>
+
+<h2>#2 Django cloud management</h2>
+
+<h3>Speaker: Robert Paul Chase</h3>
+
+<p>I was semi-lost on this one. The project was related to genetics somehow, and I
+know nothing about computational genetics.</p>
+
+<p>He built a cloud management platform that lets biologists and researchers (read:
+not developers) easily spin up nodes, install necessary software, run their
+code, and kill their cluster when they're done with it.</p>
+
+<h2>#3 <code>.format()</code>ing without tears</h2>
+
+<h3>Speaker: Richard Landau</h3>
+
+<p>The standard <code>str.format()</code> method in Python will throw a <code>KeyError</code> if a name
+isn't found in the dictionary. Rick made his own function to avoid that problem.
+Here's how it works:</p>
+
+<ul>
+<li>Uses a regex to get the names both with and without braces (e.g. "{foo}" and
+"foo")</li>
+<li>Zips those two arrays together (to get <code>('foo', '{foo}'), ('bar', '{bar}'),
+('baz', '{baz}')</code>)</li>
+<li>Constructs a dictionary from that array (the format of the tuples will work
+with <code>dict()</code>)</li>
+</ul>
+
+<p>At first, it seemed to me like another way to implement this behavior would be
+to provide <code>.format()</code> with a dictionary that, instead of throwing a <code>KeyError</code>
+when encountering an unknown key, would return a modified version of the key
+which was asked for. I tried to do that, and it turns out that doesn't work</p>
+
+<pre><code>class FancyDict(object):
+    def __init__(self, dictionary):
+        self.__dictionary = dictionary
+
+    def __getitem__(self, key):
+        try:
+            return self.__dictionary[key]
+        except KeyError:
+            return '{' + key + '}'
+
+    def keys(self):
+        return self.__dictionary.keys()
+
+if __name__ == '__main__':
+    params = { 'foo': 'this is foo', 'bar': 'this is bar', 'baz': 'this is baz' }
+    print '{foo} {bar} {baz}'.format(**params)
+    # this is foo this is bar this is baz
+
+    params = { 'foo': 'this is foo', 'bar': 'this is bar' }
+    print '{foo} {bar} {baz}'.format(**params)
+    # KeyError: 'baz'
+
+    params = FancyDict({ 'foo': 'this is foo', 'bar': 'this is bar' })
+    print '{foo} {bar} {baz}'.format(**params)
+    # KeyError: 'baz'
+</code></pre>
+
+<p><code>str.format()</code> gets the keys of the dictionary and will throw a <code>KeyError</code> if
+any of the strings in curly braces are absent.</p>
+
+<h2>#4 Test all the data</h2>
+
+<h3>Speaker: Eric J Ma</h3>
+
+<ul>
+<li>Testing data is important because you have some assumptions about it that may
+not always be correct</li>
+<li>He talked some more about how to do that using PyTest</li>
+</ul>
+
+<h2>#5 Visualizing Yeast ChIP-Seq data</h2>
+
+<h3>Speaker: Luis Soares</h3>
+
+<p>I was completely out of my league on the domain of this one, which was something
+related to biology.</p>
+
+<p>It looked like a neat web-based visualization project.</p>
+
+<h2>#6 Payment reform</h2>
+
+<h3>Speaker: James Santucci</h3>
+
+<p>I wasn't super familiar with the domain (statistics).</p>
+
+<p>The big takeaway was that how we measure value affects how much value we
+observe. I'm not sure what that means.</p>
+
+<h2>#7 Hypothesis: property-based testing</h2>
+
+<h3>Speaker: Matt Bachmann</h3>
+
+<ul>
+<li>Hypothesis is a Python library inspired by Haskell's QuickCheck</li>
+<li>You put a decorator on your test to say what kind of data it takes</li>
+<li>It works with most testing frameworks</li>
+<li>You write a small amount of code, but get a big amount of functionality tested</li>
+</ul>
+  </body>
+</html>
